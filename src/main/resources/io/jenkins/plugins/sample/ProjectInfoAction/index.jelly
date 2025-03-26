@@ -1,0 +1,31 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core"
+         xmlns:l="/lib/layout"
+         xmlns:st="jelly:stapler">
+    <l:layout title="Project Information">
+        <l:side-panel>
+            <l:tasks>
+                <l:task icon="clipboard.png" href="." title="Refresh"/>
+            </l:tasks>
+        </l:side-panel>
+        <l:main-panel>
+            <h1>Projects</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <j:forEach var="project" items="${it.projects}">
+                        <tr>
+                            <td>${project.name}</td>
+                            <td>${project.description}</td>
+                        </tr>
+                    </j:forEach>
+                </tbody>
+            </table>
+        </l:main-panel>
+    </l:layout>
+</j:jelly>
