@@ -1,4 +1,4 @@
 <?jelly escape-by-default='true'?>
 <div>
-    TODO
+    Provides OpenAPI/Swagger documentation for Jenkins REST APIs
 </div>
