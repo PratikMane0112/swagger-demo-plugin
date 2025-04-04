@@ -1,0 +1,21 @@
+                        <?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler">
+    <st:documentation>
+        Swagger UI library resources for the Jenkins API Documentation plugin.
+    </st:documentation>
+
+    <!-- Swagger UI CSS -->
+    <st:adjunct name="io.jenkins.swagger-ui.css">
+        <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui.css" />
+    </st:adjunct>
+
+    <!-- Swagger UI bundle -->
+    <st:adjunct name="io.jenkins.swagger-ui.bundle">
+        <script src="https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui-bundle.js"></script>
+    </st:adjunct>
+
+    <!-- Swagger UI standalone preset -->
+    <st:adjunct name="io.jenkins.swagger-ui.standalone-preset">
+        <script src="https://unpkg.com/swagger-ui-dist@4.15.5/swagger-ui-standalone-preset.js"></script>
+    </st:adjunct>
+</j:jelly> 

@@ -1,4 +1,10 @@
 <?jelly escape-by-default='true'?>
 <div>
-    Provides OpenAPI/Swagger documentation for Jenkins REST APIs
+    This plugin provides Swagger/OpenAPI documentation for Jenkins REST APIs.
+    <p>
+    The documentation is available at <a href="${rootURL}/swagger-ui">${rootURL}/swagger-ui</a>
+    </p>
+    <p>
+    <strong>Direct Access:</strong> <a href="${rootURL}/plugin/swagger-demo/swagger-ui.jsp">Click here for Swagger UI</a>
+    </p>
 </div>

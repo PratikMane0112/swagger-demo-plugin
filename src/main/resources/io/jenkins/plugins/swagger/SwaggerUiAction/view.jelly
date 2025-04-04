@@ -1,0 +1,117 @@
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:l="/lib/layout">
+    <l:layout title="Jenkins REST API Documentation" norefresh="true">
+        <l:side-panel>
+            <l:tasks>
+                <l:task icon="icon-up icon-md" href="${rootURL}/" title="${%Back to Dashboard}"/>
+            </l:tasks>
+        </l:side-panel>
+        <l:main-panel>
+            <h1 class="jenkins-heading">
+                <img src="${rootURL}/images/24x24/document.png" alt=""/>
+                Jenkins REST API Documentation
+            </h1>
+
+            <div style="margin:20px;">
+                <p>Please select an API to view:</p>
+                <select id="api-select" style="min-width:250px;padding:5px;" onchange="updateSwaggerUI(this.value)">
+                    <option value="${rootURL}/swagger-ui/rest/api/1.0">Jenkins Core API</option>
+                </select>
+            </div>
+
+            <div id="swagger-ui" style="margin:20px;"></div>
+
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui.min.css"/>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-bundle.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/4.15.5/swagger-ui-standalone-preset.min.js"></script>
+
+            <script type="text/javascript">
+            /* <![CDATA[ */
+                window.onload = function() {
+                    // Fetch the list of available APIs
+                    fetch('${rootURL}/${it.urlName}/apiList')
+                        .then(response => response.json())
+                        .then(data => {
+                            const select = document.getElementById('api-select');
+                            // Clear existing options except the first one (Core API)
+                            while (select.options.length > 1) {
+                                select.remove(1);
+                            }
+                            
+                            // Add plugin APIs to dropdown
+                            for (const [name, url] of Object.entries(data)) {
+                                if (name === 'core') continue; // Skip core, already added
+                                
+                                const option = document.createElement('option');
+                                option.value = url;
+                                option.textContent = name + ' Plugin API';
+                                select.appendChild(option);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error fetching API list:", error);
+                            document.getElementById('swagger-ui').innerHTML = '<div style="color:red;">Error loading API list</div>';
+                        });
+                        
+                    // Initialize the Swagger UI with Core API
+                    updateSwaggerUI('${rootURL}/swagger-ui/rest/api/1.0');
+                }
+
+                function updateSwaggerUI(url) {
+                    console.log("Loading Swagger UI for URL:", url);
+                    
+                    const swaggerDiv = document.getElementById('swagger-ui');
+                    // Clear existing content
+                    while (swaggerDiv.firstChild) {
+                        swaggerDiv.removeChild(swaggerDiv.firstChild);
+                    }
+                    
+                    // Initialize Swagger UI with the selected API
+                    window.ui = SwaggerUIBundle({
+                        url: url,
+                        dom_id: '#swagger-ui',
+                        deepLinking: true,
+                        presets: [
+                            SwaggerUIBundle.presets.apis,
+                            SwaggerUIStandalonePreset
+                        ],
+                        layout: "StandaloneLayout",
+                        defaultModelsExpandDepth: -1, // Hide models by default
+                        displayRequestDuration: true,
+                        requestInterceptor: function(request) {
+                            // Add logging to see what's happening
+                            console.log("Making request to:", request.url);
+                            
+                            // Add Jenkins crumb for security
+                            const crumbField = document.querySelector('head meta[name="crumb-field"]');
+                            const crumbValue = document.querySelector('head meta[name="crumb-value"]');
+                            if (crumbField && crumbValue) {
+                                request.headers[crumbField.content] = crumbValue.content;
+                            }
+                            return request;
+                        },
+                        responseInterceptor: function(response) {
+                            // Add logging to see the response
+                            console.log("Response status:", response.status);
+                            console.log("Response URL:", response.url);
+                            if (response.status !== 200) {
+                                console.error("Error response:", response.data);
+                            }
+                            return response;
+                        },
+                        onComplete: function() {
+                            console.log("Swagger UI loaded successfully");
+                        },
+                        onFailure: function(error) {
+                            console.error("Failed to load Swagger UI:", error);
+                            swaggerDiv.innerHTML = '<div style="color:red;padding:20px;"><h2>Error Loading API Specification</h2>' +
+                                '<p>' + error + '</p>' + 
+                                '<p>Try accessing the API directly at: <a href="' + url + '" target="_blank">' + url + '</a></p></div>';
+                        }
+                    });
+                }
+            /* ]]> */
+            </script>
+        </l:main-panel>
+    </l:layout>
+</j:jelly> 
