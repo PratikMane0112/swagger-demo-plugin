@@ -70,7 +70,7 @@
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>swagger-ui</artifactId>
-      <version>4.15.5</version>
+      <version>5.21.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -137,7 +137,7 @@
                 <artifactItem>
                   <groupId>org.webjars</groupId>
                   <artifactId>swagger-ui</artifactId>
-                  <version>4.15.5</version>
+                  <version>5.21.0</version>
                   <outputDirectory>${project.build.directory}/webjars</outputDirectory>
                 </artifactItem>
               </artifactItems>
